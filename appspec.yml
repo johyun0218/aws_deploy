@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: index.js
-    destination: /var/www/
+  - source: /
+    destination: /var/www/aws-exercise-a
 
 permissions:
   - object: /
@@ -12,17 +12,33 @@ permissions:
 
 hooks:
   BeforeInstall:
-    - location: scripts/install_dependencies.sh
+    - location: scripts/before_install.sh
       timeout: 300
-      runas: ec2-user
+      runas: ubuntu
+  # During the AfterInstall deployment lifecycle event, run the commands
+  #   in the script specified in "location".
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 300
+      runas: ubuntu
+  # During the ApplicationInstall deployment lifecycle event, run the commands
+  #   in the script specified in "location".
   ApplicationStart:
     - location: scripts/start_server.sh
       timeout: 300
-  ApplicationStop:
-    - location: scripts/stop_server.sh
-      timeout: 300
-      runas: ec2-user
-  ValidateService:
-    - location: scripts/validate_server.sh
-      timeout: 300
-      runas: ec2-user
+      runas: ubuntu
+  # BeforeInstall:
+  #   - location: scripts/install_dependencies.sh
+  #     timeout: 300
+  #     runas: ec2-user
+  # ApplicationStart:
+  #   - location: scripts/start_server.sh
+  #     timeout: 300
+  # ApplicationStop:
+  #   - location: scripts/stop_server.sh
+  #     timeout: 300
+  #     runas: ec2-user
+  # ValidateService:
+  #   - location: scripts/validate_server.sh
+  #     timeout: 300
+  #     runas: ec2-user
